@@ -7,7 +7,7 @@
 PROGRAM = traffic.x
 
 # The source files (*.cc)
-SRCS = TrafficController.cc TrafficGenerator.cc Monitor.cc main_testbench.cc
+SRCS = traffic_light_controller.cc traffic_generator.cc monitor.cc testbench.cc
 
 ##################################
 ## DO NOT CHANGE ANYTHING BELOW ##
@@ -44,18 +44,17 @@ $(EXE): $(OBJS)
 # recompile the object file. The list should be the .cc-file beeing compiled,
 # and all the .h-files that are included in that .cc-file.
 
-main_testbench.o: main_testbench.cc traffic.h
-	$(CC) -c $(CFLAGS) $(INCDIR) main_testbench.cc -o main_testbench.o
+testbench.o: testbench.cc traffic_light_controller.h traffic_generator.h monitor.h
+	$(CC) -c $(CFLAGS) $(INCDIR) testbench.cc -o testbench.o
 
-TrafficController.o: TrafficController.cc traffic.h
-	$(CC) -c $(CFLAGS) $(INCDIR) TrafficController.cc -o TrafficController.o
+traffic_light_controller.o: traffic_light_controller.cc traffic_light_controller.h
+	$(CC) -c $(CFLAGS) $(INCDIR) traffic_light_controller.cc -o traffic_light_controller.o
 
-TrafficGenerator.o: TrafficGenerator.cc traffic.h
-	$(CC) -c $(CFLAGS) $(INCDIR) TrafficGenerator.cc -o TrafficGenerator.o
+traffic_generator.o: traffic_generator.cc traffic_generator.h traffic_light_controller.h
+	$(CC) -c $(CFLAGS) $(INCDIR) traffic_generator.cc -o traffic_generator.o
 
-Monitor.o: Monitor.cc traffic.h
-	$(CC) -c $(CFLAGS) $(INCDIR) Monitor.cc -o Monitor.o
+monitor.o: monitor.cc monitor.h traffic_light_controller.h
+	$(CC) -c $(CFLAGS) $(INCDIR) monitor.cc -o monitor.o
 
 clean:
 	rm -f $(OBJS) $(EXE) *~
-
