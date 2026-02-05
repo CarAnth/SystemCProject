@@ -1,0 +1,17 @@
+#ifndef MONITOR_H
+#define MONITOR_H
+
+#include <systemc.h>
+#include <cassert>
+
+SC_MODULE(Monitor) {
+
+    sc_in<int> NS, SN, WE, EW;
+
+    SC_HAS_PROCESS(Monitor);
+    Monitor(sc_module_name name);
+
+    void safety_check();
+};
+
+#endif
