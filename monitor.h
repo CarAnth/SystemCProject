@@ -6,12 +6,12 @@
 
 SC_MODULE(Monitor) {
 
-    sc_in<int> NS, SN, WE, EW;
+    sc_in<int> NS, SN, WE, EW;//inputs
 
     SC_HAS_PROCESS(Monitor);
     Monitor(sc_module_name name);
 
-    void safety_check();
+    void check_and_print();
 };
 
 #endif
