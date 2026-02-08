@@ -35,6 +35,6 @@ int sc_main(int argc, char **argv)
     Monitor mon("Monitor");
     mon(NS, SN, WE, EW);
 
-    sc_start(60, SC_SEC);
+    sc_start(sc_time(sim_s, SC_SEC));
     return 0;
 }

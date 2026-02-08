@@ -19,7 +19,7 @@ Monitor::Monitor(sc_module_name name)
     sensitive << NS << SN << WE << EW;// sensitive for axises
 }
 
-void Monitor::check_and_print()
+void Monitor::check_and_print()//observing outputs
 {
 
     cout << sc_time_stamp()//writing log
@@ -29,7 +29,7 @@ void Monitor::check_and_print()
 	 << " EW=" << color(EW.read())
 	 << endl;
 
-    bool ns_axis_green = (NS.read() == 1) || (SN.read() == 1);//safety asserts
-    bool we_axis_green = (WE.read() == 1) || (EW.read() == 1);
-    assert(!(ns_axis_green && we_axis_green));
+    bool ns_axis_green = (NS.read() == 1) || (SN.read() == 1);//safety assert for nx_axis
+    bool we_axis_green = (WE.read() == 1) || (EW.read() == 1);//safety assert for we_axis
+    assert(!(ns_axis_green && we_axis_green));//detecting safety errors
 }

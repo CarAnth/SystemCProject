@@ -2,27 +2,28 @@
 #define TRAFFIC_GENERATOR_H
 
 #include <systemc.h>
+#include <random>
 #include <cstdlib>
 
 SC_MODULE(TrafficGenerator) {
 
-    sc_event *ev_NS, *ev_SN, *ev_WE, *ev_EW;
-    
-    //0 = random, 1 = targeted
-    int mode;
+    sc_event *ev_NS, *ev_SN, *ev_WE, *ev_EW;//pointers for events
 
-    SC_HAS_PROCESS(TrafficGenerator);//name , references, mode_
+    SC_HAS_PROCESS(TrafficGenerator);//TrafficGenerator module has process
+
     TrafficGenerator(sc_module_name name,
                      sc_event &ns,//these uses actual events from controller
                      sc_event &sn,
                      sc_event &we,
-                     sc_event &ew,
-		     int mode_);
+                     sc_event &ew);
 
-    void generate_thread();
+    //Independent traffic sources for  per direction
+    void generate_NS();
+    void generate_SN();
+    void generate_WE();
+    void generate_EW();
 
-private://we're gonna use only in the generator
-    void notify_dir(int dir);
+    static int next_delay_sec();
 
 };
 
