@@ -9,9 +9,8 @@
 
 int sc_main(int argc, char **argv)
 {
-    assert(argc==3);
+    assert(argc==2);
 
-    int mode = atoi(argv[2]);
     double sim_s = atof(argv[1]);
 
     // Optional: deterministic randomness for repeatable runs
