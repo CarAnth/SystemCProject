@@ -10,7 +10,7 @@ SC_MODULE(LightController) {
 
     // vehicle arrival events(events)
     //Reference: https://www.asic-world.com/systemc/systemc_time4.html#sc_event
-    sc_event ev_NS, ev_SN, ev_WE, ev_EW, ev_req;// we're using sc_event rather than sc_signal<bool> because it's easier to use.
+    sc_event ev_NS, ev_SN, ev_WE, ev_EW;// we're using sc_event rather than sc_signal<bool> because it's easier to use.
 
     bool req_NS, req_SN, req_WE, req_EW;//request flags, for the memory
 
@@ -19,8 +19,6 @@ SC_MODULE(LightController) {
     LightController(sc_module_name name);
 
     void control_logic();//defining control logic function
-    void pulse_to_memory();
-    
 };
 
 #endif
