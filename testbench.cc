@@ -11,7 +11,7 @@ int sc_main(int argc, char **argv)
 {
     assert(argc==2);
 
-    double sim_s = atof(argv[1]);
+    int sim_s = atoi(argv[1]);
 
     // Optional: deterministic randomness for repeatable runs
     srand(time(NULL));
