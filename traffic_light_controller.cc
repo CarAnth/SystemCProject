@@ -2,10 +2,15 @@
 
 LightController::LightController(sc_module_name name)
 : sc_module(name),//base class
-  req_NS(false), req_SN(false), req_WE(false), req_EW(false)//all requests initialize to false
+  
 {
     SC_THREAD(control_logic);//we will use wait()
-
+    //reset all memories 
+    req_NS = false;
+    req_SN = false;
+    req_WE = false;
+    req_EW = false; 
+  
     //all lights red
     NS.initialize(0);
     SN.initialize(0);
