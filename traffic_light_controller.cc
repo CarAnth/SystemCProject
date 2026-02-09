@@ -18,7 +18,7 @@ void LightController::control_logic()
     //inf while
     while (true) {
         //wait until at least one vehicle arrives
-        wait(ev_NS || ev_SN || ev_WE || ev_EW);
+        wait(ev_NS | ev_SN | ev_WE | ev_EW);
 
         // req holds memory. we're going to use for if statements
         if (ev_NS.triggered()) req_NS = true;
