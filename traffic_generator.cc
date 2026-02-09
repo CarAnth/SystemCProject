@@ -9,8 +9,8 @@ TrafficGenerator::TrafficGenerator(sc_module_name name,
                                    sc_event &ns,
                                    sc_event &sn,
                                    sc_event &we,
-                                   sc_event &ew)//class::constructor(sc_event pointer)
-    :sc_module(name)//Template codes in lab document."counter.cc and 2.2, 2.3"
+                                   sc_event &ew)
+    :sc_module(name)
 {
     ev_NS = &ns;//defining pointers
     ev_SN = &sn;
