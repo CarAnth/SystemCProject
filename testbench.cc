@@ -13,8 +13,8 @@ int sc_main(int argc, char **argv)
 
     int sim_s = atoi(argv[1]);
 
-    // Optional: deterministic randomness for repeatable runs
-    srand(time(NULL));
+    
+    srand(time(NULL));//random seed for rand()
 
 
     sc_time sim_time(sim_s, SC_SEC);
