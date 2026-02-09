@@ -21,7 +21,7 @@ int sc_main(int argc, char **argv)
 
     sc_signal<int> NS, SN, WE, EW;
 
-    TrafficLightController ctrl("Controller");
+	LightController ctrl("Controller");
     ctrl(NS, SN, WE, EW);
 
     TrafficGenerator gen("Generator",
