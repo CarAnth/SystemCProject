@@ -15,7 +15,7 @@ Monitor::Monitor(sc_module_name name)
 : sc_module(name)
 {
     SC_METHOD(check_and_print);
-    dont_initialize();//first trigger  when signal changes
+    dont_initialize();//first trigger  when signal changes,not t=0
     sensitive << NS << SN << WE << EW;// sensitive for axises
 }
 
