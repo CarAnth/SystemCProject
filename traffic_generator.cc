@@ -4,7 +4,7 @@ using std::cout;
 int TrafficGenerator::next_delay_sec()
 {
 
-    return(rand()%4)+1;//rand()%4=0,1,2,3 with + 1 = 1,2,3,4.   
+    return(rand()%5)+1;//1,2,3,4,5  
 }
 
 TrafficGenerator::TrafficGenerator(sc_module_name name,
