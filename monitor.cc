@@ -6,7 +6,7 @@
 using std::cout;//we don't need to write std:: prefix
 using std::endl;
 
-const char* color(int v){
+const char* color(bool v){
     return v ? "GREEN":"RED";//more visual output
 }
 
