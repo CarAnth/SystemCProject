@@ -1,9 +1,8 @@
 #include "traffic_light_controller.h"
 
 LightController::LightController(sc_module_name name)
-: sc_module(name),//base class
-  
-{
+: sc_module(name)//base class
+  {
     SC_THREAD(control_logic);//we will use wait()
     //reset all memories 
     req_NS = false;
@@ -39,12 +38,12 @@ void LightController::control_logic()
         if (ns_memory)
         {
             // cross axis must be red (safety)
-            WE->write(0);//WE light goes 0
-            EW->write(0);//EW light goes 0
+            WE->write(false);//WE light goes 0
+            EW->write(false);//EW light goes 0
 
             // independent operation within the axis
-            NS->write(req_NS ? 1 : 0); // condition ? value_if_true : value_if_false
-            SN->write(req_SN ? 1 : 0);
+            NS->write(req_NS ? true : false); // condition ? value_if_true : value_if_false
+            SN->write(req_SN ? true : false);
             
             wait(5, SC_SEC);//wait for 5 sec
             //light goes green for 5 seconds
@@ -52,8 +51,8 @@ void LightController::control_logic()
           
             req_NS = false;
             req_SN = false;
-            NS->write(0);
-            SN->write(0);
+            NS->write(false);
+            SN->write(false);
             //requests and light resets
         }
 
@@ -61,20 +60,20 @@ void LightController::control_logic()
         if (we_memory)
         {
             // cross axis must be red (safety)
-            NS->write(0);
-            SN->write(0);
+            NS->write(false);
+            SN->write(false);
 
             // independent operation within the axis
-            WE->write(req_WE ? 1 : 0);
-            EW->write(req_EW ? 1 : 0);
+            WE->write(req_WE ? true : false);
+            EW->write(req_EW ? true : false);
 
             wait(5, SC_SEC);
 
             // clear served requests and go red
             req_WE = false;
             req_EW = false;
-            WE->write(0);
-            EW->write(0);
+            WE->write(false);
+            EW->write(false);
         }
     }
 }

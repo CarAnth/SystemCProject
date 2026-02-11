@@ -9,17 +9,17 @@
 
 int sc_main(int argc, char **argv)
 {
-    assert(argc==2);
+    assert(argc==3);
 
     int sim_s = atoi(argv[1]);
-
+    int mode = atoi(argv[2]);
     
     srand(time(NULL));//random seed for rand()
 
 
     sc_time sim_time(sim_s, SC_SEC);
 
-    sc_signal<int> NS, SN, WE, EW;
+    sc_signal<bool> NS, SN, WE, EW;
 
 	LightController ctrl("Controller");
     ctrl(NS, SN, WE, EW);
@@ -29,7 +29,7 @@ int sc_main(int argc, char **argv)
                          ctrl.ev_SN,
                          ctrl.ev_WE,
                          ctrl.ev_EW,
-			 mode);
+                        mode);
 
     Monitor mon("Monitor");
     mon(NS, SN, WE, EW);

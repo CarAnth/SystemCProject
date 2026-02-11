@@ -6,7 +6,7 @@
 
 SC_MODULE(Monitor) {
 
-    sc_in<int> NS, SN, WE, EW;//inputs
+    sc_in<bool> NS, SN, WE, EW;//inputs
 
     SC_HAS_PROCESS(Monitor);
     Monitor(sc_module_name name);

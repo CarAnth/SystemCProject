@@ -1,15 +1,24 @@
 #include "traffic_generator.h"
+using std::cout;
 
 int TrafficGenerator::next_delay_sec()
 {
-    return(rand()%4)+1;//rand()%4=0,1,2,3 with + 1 = 1,2,3,4.
+    if (mode == 0)
+    {
+        return(rand()%4)+1;//rand()%4=0,1,2,3 with + 1 = 1,2,3,4.
+    }else{
+        return 1;//targeted
+    }
+    
+    
 }
 
 TrafficGenerator::TrafficGenerator(sc_module_name name,
                                    sc_event &ns,
                                    sc_event &sn,
                                    sc_event &we,
-                                   sc_event &ew)
+                                   sc_event &ew,
+                                   int mode)
     :sc_module(name)
 {
     ev_NS = &ns;//defining pointers
@@ -17,10 +26,14 @@ TrafficGenerator::TrafficGenerator(sc_module_name name,
     ev_EW = &ew;
     ev_WE = &we;
 
-    SC_THREAD(generate_NS);//we are using wait()function
-    SC_THREAD(generate_SN);//4 independent function
-    SC_THREAD(generate_EW);
-    SC_THREAD(generate_WE);
+    if(mode==0){
+        SC_THREAD(generate_NS);//we are using wait()function
+        SC_THREAD(generate_SN);//4 independent function
+        SC_THREAD(generate_EW);
+        SC_THREAD(generate_WE);
+    }else{
+        SC_THREAD(targeted_traffic);
+    }
 }
 
 void TrafficGenerator::generate_NS(){
@@ -50,4 +63,38 @@ void TrafficGenerator::generate_EW(){
         wait(next_delay_sec(),SC_SEC);
         ev_EW->notify();
     }    
+}
+
+void TrafficGenerator::targeted_traffic()
+{
+    while (true)
+    {
+        //single direction
+        ev_SN->notify();
+        wait(10,SC_SEC);
+
+        ev_NS->notify();
+        wait(10,SC_SEC);
+        
+        ev_WE->notify();
+        wait(10,SC_SEC);
+
+        ev_EW->notify();
+        wait(10,SC_SEC);
+        
+        //parallel direction
+        ev_SN->notify();
+        ev_NS->notify();
+        wait(10,SC_SEC);
+        
+        ev_WE->notify();
+        ev_EW->notify();
+        wait(10,SC_SEC);
+
+        //perpendicular
+        ev_NS->notify();
+        ev_WE->notify();
+        wait(10,SC_SEC);
+    }
+    
 }
