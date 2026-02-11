@@ -3,14 +3,8 @@ using std::cout;
 
 int TrafficGenerator::next_delay_sec()
 {
-    if (mode == 0)
-    {
-        return(rand()%4)+1;//rand()%4=0,1,2,3 with + 1 = 1,2,3,4.
-    }else{
-        return 1;//targeted
-    }
-    
-    
+
+    return(rand()%4)+1;//rand()%4=0,1,2,3 with + 1 = 1,2,3,4.   
 }
 
 TrafficGenerator::TrafficGenerator(sc_module_name name,
