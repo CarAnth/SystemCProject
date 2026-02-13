@@ -29,7 +29,7 @@ int sc_main(int argc, char **argv)
                          ctrl.ev_SN,
                          ctrl.ev_WE,
                          ctrl.ev_EW,
-                        mode);
+                         mode);
 
     Monitor mon("Monitor");
     mon(NS, SN, WE, EW);

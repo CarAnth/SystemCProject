@@ -24,9 +24,9 @@ void Monitor::check_and_print()//observing outputs
 
     cout << sc_time_stamp()//writing log
          << "  NS=" << color(NS.read())
-         << " SN=" << color(SN.read())
+         << " SN=" << color(SN.read())<<"\n"
 	 << " WE=" << color(WE.read())
-	 << " EW=" << color(EW.read())
+	 << " EW=" << color(EW.read())<<"\n"
 	 << endl;
 
     bool ns_axis_green = NS.read() || SN.read() == 1;//safety assert for nx_axis
