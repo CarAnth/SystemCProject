@@ -16,7 +16,9 @@ SC_MODULE(LightController) {
     SC_HAS_PROCESS(LightController);
     LightController(sc_module_name name);
 
+    void event_counter();
     void control_logic();//defining control logic function
+    
     
 };
 
