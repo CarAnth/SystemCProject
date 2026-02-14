@@ -17,6 +17,11 @@ LightController::LightController(sc_module_name name)
     EW.initialize(0);
 }
 
+void LightController::event_request()
+{
+
+}
+
 void LightController::control_logic()
 {
     //inf while
