@@ -24,6 +24,12 @@ LightController::LightController(sc_module_name name)
 
 void LightController::event_counter()
 {
+    bool any = false;
+    
+    if (ev_NS.triggered()){
+      req_NS++;
+      any = true;
+    }
 
 }
 
