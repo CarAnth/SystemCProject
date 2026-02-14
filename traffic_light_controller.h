@@ -11,7 +11,7 @@ SC_MODULE(LightController) {
     // vehicle arrival events(events)
     sc_event ev_NS, ev_SN, ev_WE, ev_EW;
 
-    bool flg_NS, flg_SN, flg_WE, flg_EW;//request flags, for the memory
+    int cnt_NS, cnt_SN, cnt_WE, cnt_EW;//request flags, for the memory
 
     SC_HAS_PROCESS(LightController);
     LightController(sc_module_name name);
