@@ -9,7 +9,7 @@ SC_MODULE(LightController) {
     sc_out<bool> NS, SN, WE, EW;//false=red,true=green
 
     // vehicle arrival events(events)
-    sc_event ev_NS, ev_SN, ev_WE, ev_EW;
+    sc_event ev_NS, ev_SN, ev_WE, ev_EW, ev_req;
 
     int cnt_NS, cnt_SN, cnt_WE, cnt_EW;//request flags, for the memory
 
