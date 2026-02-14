@@ -3,12 +3,17 @@
 LightController::LightController(sc_module_name name)
 : sc_module(name)//base class
   {
+    SC_METHOD(event_counter);
+    dont_initialize();
+    sensitive << ev_NS << ev_SN << ev_WE << ev_EW;
+    
     SC_THREAD(control_logic);//we will use wait()
-    //reset all memories 
-    flg_NS = false;
-    flg_SN = false;
-    flg_WE = false;
-    flg_EW = false; 
+
+    //reset all memories be
+    flg_NS = 0;
+    flg_SN = 0;
+    flg_WE = 0;
+    flg_EW = 0; 
   
     //all lights red
     NS.initialize(0);
@@ -17,7 +22,7 @@ LightController::LightController(sc_module_name name)
     EW.initialize(0);
 }
 
-void LightController::event_request()
+void LightController::event_counter()
 {
 
 }
