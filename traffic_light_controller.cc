@@ -27,9 +27,24 @@ void LightController::event_counter()
     bool any = false;
     
     if (ev_NS.triggered()){
-      req_NS++;
+      flg_NS++;
       any = true;
     }
+    if (ev_SN.triggered()){
+      flg_SN++;
+      any = true;
+    }
+    if (ev_WE.triggered()){
+      flg_WE++;
+      any = true;
+    }
+    if (ev_EW.triggered()){
+      flg_EW++;
+      any = true;
+    }
+    if (any)
+        ev_any_req.notify(SC_ZERO_TIME);
+}
 
 }
 
@@ -37,22 +52,25 @@ void LightController::control_logic()
 {
     //inf while
     while (true) {
-        //wait until at least one vehicle arrives
-        wait(ev_NS | ev_SN | ev_WE | ev_EW); // |=sc_event_or_list
+        if ((flg_NS + flg_SN + flg_WE + flg_EW) == 0)
+            wait(ev_any_req);
 
-        // req holds memory. we're going to use for if statements
-        if (ev_NS.triggered()) flg_NS = true;
-        if (ev_SN.triggered()) flg_SN = true;
-        if (ev_WE.triggered()) flg_WE = true;
-        if (ev_EW.triggered()) flg_EW = true;
-
-        bool ns_memory = flg_NS || flg_SN; 
-        bool we_memory = flg_WE || flg_EW;
-          
+        bool ns_memory = (flg_SN + flg_NS) > 0;
+        bool we_memory = (flg_WE + flg_EW) > 0;
+        
+         if (ns_memory && we_memory)
+        {
+            if (last_was_ns)
+                ns_memory = false;
+            else
+                we_memory = false;
+        }
         
         // if NS/SN axis triggered
         if (ns_memory)
         {
+            bool serve_ns;
+            bool serve_sn;
             // cross axis must be red (safety)
             WE->write(false);//WE light goes false
             EW->write(false);//EW light goes false
