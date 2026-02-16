@@ -3,7 +3,7 @@
 LightController::LightController(sc_module_name name)
 : sc_module(name)//base class
   {
-    const int CAP_PER_DIR = 5;
+    
     SC_METHOD(event_counter);
     dont_initialize();
     sensitive << ev_NS << ev_SN << ev_WE << ev_EW;
@@ -51,6 +51,7 @@ void LightController::event_counter()
 
 void LightController::control_logic()
 {
+    const int CAP_PER_DIR = 5;
     //inf while
     while (true) {
         if ((cnt_NS + cnt_SN + cnt_WE + cnt_EW) == 0)
