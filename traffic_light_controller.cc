@@ -15,7 +15,8 @@ LightController::LightController(sc_module_name name)
     cnt_SN = 0;
     cnt_WE = 0;
     cnt_EW = 0; 
-  
+    last_was_ns = 0;
+    
     //all lights red
     NS.initialize(0);
     SN.initialize(0);
@@ -47,7 +48,6 @@ void LightController::event_counter()
         ev_req.notify(SC_ZERO_TIME);
 }
 
-}
 
 void LightController::control_logic()
 {
@@ -119,7 +119,7 @@ void LightController::control_logic()
               int dec =(cnt_WE < CAP_PER_DIR) ? cnt_WE : CAP_PER_DIR;
               cnt_WE -= dec;
             }
-            if(cnt_SN>0){
+            if(cnt_EW>0){
               int dec =(cnt_EW < CAP_PER_DIR) ? cnt_EW : CAP_PER_DIR;
               cnt_EW -= dec;
             }
