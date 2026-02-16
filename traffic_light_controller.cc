@@ -10,10 +10,10 @@ LightController::LightController(sc_module_name name)
     SC_THREAD(control_logic);//we will use wait()
 
     //reset all memories be
-    flg_NS = 0;
-    flg_SN = 0;
-    flg_WE = 0;
-    flg_EW = 0; 
+    cnt_NS = 0;
+    cnt_SN = 0;
+    cnt_WE = 0;
+    cnt_EW = 0; 
   
     //all lights red
     NS.initialize(0);
@@ -27,23 +27,23 @@ void LightController::event_counter()
     bool any = false;
     
     if (ev_NS.triggered()){
-      flg_NS++;
+      cnt_NS++;
       any = true;
     }
     if (ev_SN.triggered()){
-      flg_SN++;
+      cnt_SN++;
       any = true;
     }
     if (ev_WE.triggered()){
-      flg_WE++;
+      cnt_WE++;
       any = true;
     }
     if (ev_EW.triggered()){
-      flg_EW++;
+      cnt_EW++;
       any = true;
     }
     if (any)
-        ev_any_req.notify(SC_ZERO_TIME);
+        ev_req.notify(SC_ZERO_TIME);
 }
 
 }
@@ -52,11 +52,11 @@ void LightController::control_logic()
 {
     //inf while
     while (true) {
-        if ((flg_NS + flg_SN + flg_WE + flg_EW) == 0)
-            wait(ev_any_req);
+        if ((cnt_NS + cnt_SN + cnt_WE + cnt_EW) == 0)
+            wait(ev_req);
 
-        bool ns_memory = (flg_SN + flg_NS) > 0;
-        bool we_memory = (flg_WE + flg_EW) > 0;
+        bool ns_memory = (cnt_SN + cnt_NS) > 0;
+        bool we_memory = (cnt_WE + cnt_EW) > 0;
         
          if (ns_memory && we_memory)
         {
@@ -69,44 +69,61 @@ void LightController::control_logic()
         // if NS/SN axis triggered
         if (ns_memory)
         {
-            bool serve_ns;
-            bool serve_sn;
+            bool d_NS = (cnt_NS > 0);
+            bool d_SN = (cnt_SN > 0);
             // cross axis must be red (safety)
             WE->write(false);//WE light goes false
             EW->write(false);//EW light goes false
 
             // independent operation within the axis
-            NS->write(flg_NS ? true : false); // condition ? value_if_true : value_if_false
-            SN->write(flg_SN ? true : false);
+            NS->write(d_NS ? true : false); // condition ? value_if_true : value_if_false
+            SN->write(d_SN ? true : false);
             
             wait(5, SC_SEC);//wait for 5 sec
             //light goes green for 5 seconds
           
-            flg_NS = false;
-            flg_SN = false;
+            if(cnt_NS>0){
+              int dec =(cnt_NS < CAP_PER_DIR) ? cnt_NS : CAP_PER_DIR;
+              cnt_NS -= dec;
+            }
+            if(cnt_SN>0){
+              int dec =(cnt_SN < CAP_PER_DIR) ? cnt_SN : CAP_PER_DIR;
+              cnt_SN -= dec;
+            }
+          
             NS->write(false);
             SN->write(false);
             //requests and light resets
+
+            last_was_ns=true;
         }
 
         // if WE/EW axis triggered
         if (we_memory)
         {
+            bool d_WE = (cnt_WE > 0);
+            bool d_EW = (cnt_EW > 0);
             // cross axis must be red (safety)
             NS->write(false);
             SN->write(false);
 
             // independent operation within the axis
-            WE->write(flg_WE ? true : false);
-            EW->write(flg_EW ? true : false);
+            WE->write(d_WE ? true : false);
+            EW->write(d_EW ? true : false);
 
             wait(5, SC_SEC);
 
-            // clear served requests and go red
-            flg_WE = false;
-            flg_EW = false;
+            if(cnt_WE>0){
+              int dec =(cnt_WE < CAP_PER_DIR) ? cnt_WE : CAP_PER_DIR;
+              cnt_WE -= dec;
+            }
+            if(cnt_SN>0){
+              int dec =(cnt_EW < CAP_PER_DIR) ? cnt_EW : CAP_PER_DIR;
+              cnt_EW -= dec;
+            }
             WE->write(false);
             EW->write(false);
+            last_was_ns=false;
         }
     }
 }
