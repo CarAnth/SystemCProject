@@ -23,11 +23,12 @@ void Monitor::check_and_print()//observing outputs
 {
 
     cout << sc_time_stamp()//writing log
+
          << "  NS=" << color(NS.read())
          << " SN=" << color(SN.read())<<"\n"
-	 << " WE=" << color(WE.read())
-	 << " EW=" << color(EW.read())<<"\n"
-	 << endl;
+	     << " WE=" << color(WE.read())
+	     << " EW=" << color(EW.read())<<"\n"
+	     << endl;
 
     bool ns_axis_green = NS.read() || SN.read() == 1;//safety assert for nx_axis
     bool we_axis_green = WE.read() || EW.read() == 1;//safety assert for we_axis

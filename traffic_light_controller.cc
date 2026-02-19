@@ -60,7 +60,7 @@ void LightController::control_logic()
         bool ns_memory = (cnt_SN + cnt_NS) > 0;
         bool we_memory = (cnt_WE + cnt_EW) > 0;
         
-         if (ns_memory && we_memory)
+         if (ns_memory && we_memory)//fairness logic
         {
             if (last_was_ns)
                 ns_memory = false;
@@ -73,6 +73,7 @@ void LightController::control_logic()
         {
             bool d_NS = (cnt_NS > 0);
             bool d_SN = (cnt_SN > 0);
+            
             // cross axis must be red (safety)
             WE->write(false);//WE light goes false
             EW->write(false);//EW light goes false
@@ -84,11 +85,11 @@ void LightController::control_logic()
             wait(5, SC_SEC);//wait for 5 sec
             //light goes green for 5 seconds
           
-            if(cnt_NS>0){
-              int dec =(cnt_NS < CAP_PER_DIR) ? cnt_NS : CAP_PER_DIR;
-              cnt_NS -= dec;
+            if(d_NS && cnt_NS>0){
+              int dec =(cnt_NS < CAP_PER_DIR) ? cnt_NS : CAP_PER_DIR;// defining number named dec, its how many cars passed. It's decreased from new value.
+              cnt_NS -= dec; // cnt_NS= cnt_NS - dec
             }
-            if(cnt_SN>0){
+            if(d_SN && cnt_SN>0){
               int dec =(cnt_SN < CAP_PER_DIR) ? cnt_SN : CAP_PER_DIR;
               cnt_SN -= dec;
             }
@@ -115,11 +116,11 @@ void LightController::control_logic()
 
             wait(5, SC_SEC);
 
-            if(cnt_WE>0){
+            if(d_WE && cnt_WE>0){
               int dec =(cnt_WE < CAP_PER_DIR) ? cnt_WE : CAP_PER_DIR;
               cnt_WE -= dec;
             }
-            if(cnt_EW>0){
+            if(d_EW && cnt_EW>0){
               int dec =(cnt_EW < CAP_PER_DIR) ? cnt_EW : CAP_PER_DIR;
               cnt_EW -= dec;
             }
