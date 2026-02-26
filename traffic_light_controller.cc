@@ -51,7 +51,6 @@ void LightController::event_counter()
 
 void LightController::control_logic()
 {
-    const int CAP_PER_DIR = 5;
     //inf while
     while (true) {
         if ((cnt_NS + cnt_SN + cnt_WE + cnt_EW) == 0)
@@ -93,7 +92,7 @@ void LightController::control_logic()
               NS->write(d_NS_now ? true : false);
               SN->write(d_SN_now ? true : false);
               
-              bool ns_empty=(!d_SN_now && !d_SN_now);
+              bool ns_empty=(!d_SN_now && !d_NS_now);
               bool we_active = ((cnt_WE + cnt_EW) > 0);
               if(ns_empty && we_active){
                 break;
