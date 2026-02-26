@@ -93,17 +93,17 @@ void LightController::control_logic()
               NS->write(d_NS_now ? true : false);
               SN->write(d_SN_now ? true : false);
               
-              bool ns_empty=!(d_SN_now && d_SN_now);
-              bool we_active = (cnt_WE + cnt_EW > 0);
+              bool ns_empty=(!d_SN_now && !d_SN_now);
+              bool we_active = ((cnt_WE + cnt_EW) > 0);
               if(ns_empty && we_active){
                 break;
               }
               wait(1,SC_SEC);
 
-              if(d_NS && cnt_NS > 0){
+              if(d_NS_now && cnt_NS > 0){
                 cnt_NS--;
               }
-              if(d_SN && cnt_SN > 0){
+              if(d_SN_now && cnt_SN > 0){
                 cnt_SN--;
               }
             }
@@ -138,18 +138,18 @@ void LightController::control_logic()
               WE->write(d_WE_now ? true : false);
               EW->write(d_EW_now ? true : false);
 
-              bool we_empty=!(d_WE_now && d_EW_now);
-              bool ns_active = (cnt_NS + cnt_SN > 0);
+              bool we_empty=(!d_WE_now && !d_EW_now);
+              bool ns_active = ((cnt_NS + cnt_SN) > 0);
               if(we_empty && ns_active){
                 break;
               }
               wait(1,SC_SEC);
 
-              if(d_WE && cnt_WE > 0){
-                cnt_NS--;
+              if(d_WE_now && cnt_WE > 0){
+                cnt_WE--;
               }
-              if(d_EW && cnt_EW > 0){
-                cnt_SN--;
+              if(d_EW_now && cnt_EW > 0){
+                cnt_EW--;
               }
 
             }
