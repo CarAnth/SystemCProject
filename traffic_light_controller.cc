@@ -82,18 +82,31 @@ void LightController::control_logic()
             NS->write(d_NS ? true : false); // condition ? value_if_true : value_if_false
             SN->write(d_SN ? true : false);
             
-            wait(5, SC_SEC);//wait for 5 sec
-            //light goes green for 5 seconds
-          
-            if(d_NS && cnt_NS>0){
-              int dec =(cnt_NS < CAP_PER_DIR) ? cnt_NS : CAP_PER_DIR;// defining number named dec, its how many cars passed. It's decreased from new value.
-              cnt_NS -= dec; // cnt_NS= cnt_NS - dec
+            for (int i = 0; i < 5; i++)
+            {
+              bool d_NS_now =(cnt_NS>0);
+              bool d_SN_now =(cnt_SN>0);
+              
+              WE->write(false);
+              EW->write(false);
+              
+              NS->write(d_NS_now ? true : false);
+              SN->write(d_SN_now ? true : false);
+              
+              bool ns_empty=!(d_SN_now && d_SN_now);
+              bool we_active = (cnt_WE + cnt_EW > 0);
+              if(ns_empty && we_active){
+                break;
+              }
+              wait(1,SC_SEC);
+
+              if(d_NS && cnt_NS > 0){
+                cnt_NS--;
+              }
+              if(d_SN && cnt_SN > 0){
+                cnt_SN--;
+              }
             }
-            if(d_SN && cnt_SN>0){
-              int dec =(cnt_SN < CAP_PER_DIR) ? cnt_SN : CAP_PER_DIR;
-              cnt_SN -= dec;
-            }
-          
             NS->write(false);
             SN->write(false);
             //requests and light resets
@@ -114,15 +127,31 @@ void LightController::control_logic()
             WE->write(d_WE ? true : false);
             EW->write(d_EW ? true : false);
 
-            wait(5, SC_SEC);
+            for (int i = 0; i < 5; i++)
+            {
+              bool d_WE_now = (cnt_WE > 0);
+              bool d_EW_now = (cnt_EW > 0);
+              
+              NS->write(false);
+              SN->write(false);
 
-            if(d_WE && cnt_WE>0){
-              int dec =(cnt_WE < CAP_PER_DIR) ? cnt_WE : CAP_PER_DIR;
-              cnt_WE -= dec;
-            }
-            if(d_EW && cnt_EW>0){
-              int dec =(cnt_EW < CAP_PER_DIR) ? cnt_EW : CAP_PER_DIR;
-              cnt_EW -= dec;
+              WE->write(d_WE_now ? true : false);
+              EW->write(d_EW_now ? true : false);
+
+              bool we_empty=!(d_WE_now && d_EW_now);
+              bool ns_active = (cnt_NS + cnt_SN > 0);
+              if(we_empty && ns_active){
+                break;
+              }
+              wait(1,SC_SEC);
+
+              if(d_WE && cnt_WE > 0){
+                cnt_NS--;
+              }
+              if(d_EW && cnt_EW > 0){
+                cnt_SN--;
+              }
+
             }
             WE->write(false);
             EW->write(false);

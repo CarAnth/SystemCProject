@@ -73,30 +73,30 @@ void TrafficGenerator::targeted_traffic()
     {
         //single direction
         ev_SN->notify(SC_ZERO_TIME);
-        wait(5,SC_SEC);//5
+        wait(1,SC_SEC);
 
         ev_NS->notify(SC_ZERO_TIME);
-        wait(5,SC_SEC);//10
+        wait(1,SC_SEC);
         
         ev_WE->notify(SC_ZERO_TIME);
-        wait(5,SC_SEC);//15
+        wait(1,SC_SEC);
 
         ev_EW->notify(SC_ZERO_TIME);
-        wait(5,SC_SEC);
+        wait(1,SC_SEC);
         
         //parallel direction
         ev_SN->notify(SC_ZERO_TIME);
         ev_NS->notify(SC_ZERO_TIME);
-        wait(5,SC_SEC);
+        wait(6,SC_SEC);
         
         ev_WE->notify(SC_ZERO_TIME);
         ev_EW->notify(SC_ZERO_TIME);
-        wait(5,SC_SEC);
+        wait(6,SC_SEC);
 
         //perpendicular
         ev_NS->notify(SC_ZERO_TIME);
         ev_WE->notify(SC_ZERO_TIME);
-        wait(5,SC_SEC);
+        wait(6,SC_SEC);
         
         ev_SN->notify(SC_ZERO_TIME);
         ev_EW->notify(SC_ZERO_TIME);
@@ -116,9 +116,9 @@ void TrafficGenerator::targeted_traffic()
         ev_SN->notify(SC_ZERO_TIME);
         wait(1,SC_SEC);
 
-        wait(2,SC_SEC);
+        wait(9,SC_SEC);
 
-        wait(7,SC_SEC);
+        
 
         ev_NS->notify(SC_ZERO_TIME);
         wait(1,SC_SEC);
@@ -152,6 +152,21 @@ void TrafficGenerator::targeted_traffic()
         wait(1,SC_SEC);
         ev_EW->notify(SC_ZERO_TIME);
         wait(1,SC_SEC);
+
+        
+
+        ev_NS->notify(SC_ZERO_TIME);
+        wait(1,SC_SEC);
+        ev_SN->notify(SC_ZERO_TIME);
+        wait(1,SC_SEC);
+        ev_WE->notify(SC_ZERO_TIME);
+        wait(1,SC_SEC);
+        ev_WE->notify(SC_ZERO_TIME);
+        wait(1,SC_SEC);
+        ev_WE->notify(SC_ZERO_TIME);
+        wait(1,SC_SEC);
+
+
 
     }
     
