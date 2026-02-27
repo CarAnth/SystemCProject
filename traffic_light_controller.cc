@@ -18,10 +18,10 @@ LightController::LightController(sc_module_name name)
     last_was_ns = 0;
     
     //all lights red
-    NS.initialize(0);
-    SN.initialize(0);
-    WE.initialize(0);
-    EW.initialize(0);
+    NS.initialize(false);
+    SN.initialize(false);
+    WE.initialize(false);
+    EW.initialize(false);
 }
 
 void LightController::event_counter()
@@ -70,91 +70,107 @@ void LightController::control_logic()
         // if NS/SN axis triggered
         if (ns_memory)
         {
-            bool d_NS = (cnt_NS > 0);
-            bool d_SN = (cnt_SN > 0);
-            
-            // cross axis must be red (safety)
-            WE->write(false);//WE light goes false
-            EW->write(false);//EW light goes false
+            int serve_NS = (cnt_NS < 5) ? cnt_NS : 5;
+            int serve_SN = (cnt_SN < 5) ? cnt_NS : 5;
+            bool ns_finished = (serve_NS==0);
+            bool sn_finished = (serve_NS==0);
 
-            // independent operation within the axis
-            NS->write(d_NS ? true : false); // condition ? value_if_true : value_if_false
-            SN->write(d_SN ? true : false);
-            
-            for (int i = 0; i < 5; i++)
-            {
-              bool d_NS_now =(cnt_NS>0);
-              bool d_SN_now =(cnt_SN>0);
-              
-              WE->write(false);
-              EW->write(false);
-              
-              NS->write(d_NS_now ? true : false);
-              SN->write(d_SN_now ? true : false);
-              
-              bool ns_empty=(!d_SN_now && !d_NS_now);
-              bool we_active = ((cnt_WE + cnt_EW) > 0);
-              if(ns_empty && we_active){
-                break;
-              }
-              wait(1,SC_SEC);
+            WE.write(false);
+            EW.write(false);
 
-              if(d_NS_now && cnt_NS > 0){
-                cnt_NS--;
-              }
-              if(d_SN_now && cnt_SN > 0){
-                cnt_SN--;
-              }
-            }
-            NS->write(false);
-            SN->write(false);
-            //requests and light resets
+            NS.write(serve_NS > 0 ? true : false);
+            SN.write(serve_SN > 0 ? true : false);
 
-            last_was_ns=true;
+            ev_phase_end.notify(5,SC_SEC);
+
+          
+          
+
+          while (true)
+          {
+            wait(ev_NS_done | ev_SN_done | ev_phase_end);
+        
+          if (ev_NS_done.triggered() && !ns_finished) {
+            cnt_NS -= serve_NS;
+            if (cnt_NS < 0) cnt_NS = 0;
+            NS.write(false);
+            ns_finished = true;
+          }
+
+        
+          if (ev_SN_done.triggered() && !sn_finished) {
+            cnt_SN -= serve_SN;
+            if (cnt_SN < 0) cnt_SN = 0;
+            SN.write(false);
+            sn_finished = true;
+          }
+
+          if (ev_SN_done.triggered()&& ev_NS_done.triggered()) {
+            NS.write(false);
+            SN.write(false);
+            last_was_ns = true;
+            break;
+          }
+
+          if (ev_phase_end.triggered()) {
+            NS.write(false);
+            SN.write(false);
+            last_was_ns = true;
+            break;
+          }
+          
         }
+      }
 
         // if WE/EW axis triggered
         if (we_memory)
         {
-            bool d_WE = (cnt_WE > 0);
-            bool d_EW = (cnt_EW > 0);
-            // cross axis must be red (safety)
-            NS->write(false);
-            SN->write(false);
+            int serve_WE = (cnt_WE < 5) ? cnt_WE : 5;
+            int serve_EW = (cnt_EW < 5) ? cnt_EW : 5;
+            bool we_finished = (serve_WE==0);
+            bool ew_finished = (serve_EW==0);
 
-            // independent operation within the axis
-            WE->write(d_WE ? true : false);
-            EW->write(d_EW ? true : false);
+            NS.write(false);
+            SN.write(false);
 
-            for (int i = 0; i < 5; i++)
-            {
-              bool d_WE_now = (cnt_WE > 0);
-              bool d_EW_now = (cnt_EW > 0);
-              
-              NS->write(false);
-              SN->write(false);
+            WE.write(serve_WE > 0 ? true : false);
+            EW.write(serve_EW > 0 ? true : false);
 
-              WE->write(d_WE_now ? true : false);
-              EW->write(d_EW_now ? true : false);
+            ev_phase_end.notify(5,SC_SEC);
+          while (true)
+          {
+            wait(ev_WE_done | ev_EW_done | ev_phase_end);
+        
+          if (ev_WE_done.triggered() && !we_finished) {
+            cnt_WE -= serve_WE;
+            if (cnt_WE < 0) cnt_WE = 0;
+            WE.write(false);
+            we_finished = true;
+          }
 
-              bool we_empty=(!d_WE_now && !d_EW_now);
-              bool ns_active = ((cnt_NS + cnt_SN) > 0);
-              if(we_empty && ns_active){
-                break;
-              }
-              wait(1,SC_SEC);
+        
+          if (ev_EW_done.triggered() && !ew_finished) {
+            cnt_EW -= serve_EW;
+            if (cnt_EW < 0) cnt_EW = 0;
+            EW.write(false);
+            ew_finished = true;
+          }
 
-              if(d_WE_now && cnt_WE > 0){
-                cnt_WE--;
-              }
-              if(d_EW_now && cnt_EW > 0){
-                cnt_EW--;
-              }
+          if (ev_WE_done.triggered()&& ev_EW_done.triggered()) {
+            WE.write(false);
+            EW.write(false);
+            last_was_ns = true;
+            break;
+          }
 
-            }
-            WE->write(false);
-            EW->write(false);
-            last_was_ns=false;
+          if (ev_phase_end.triggered()) {
+            WE.write(false);
+            EW.write(false);
+            last_was_ns = true;
+            break;
+          }
+          
+        }
         }
     }
 }

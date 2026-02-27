@@ -30,7 +30,7 @@ void Monitor::check_and_print()//observing outputs
 	     << " EW=" << color(EW.read())<<"\n"
 	     << endl;
 
-    bool ns_axis_green = NS.read() || SN.read() == 1;//safety assert for nx_axis
-    bool we_axis_green = WE.read() || EW.read() == 1;//safety assert for we_axis
-    assert(!(ns_axis_green && we_axis_green));//detecting safety errors
+    bool ns_axis_green = NS.read() || SN.read();//safety assert for nx_axis
+    bool we_axis_green = WE.read() || EW.read();//safety assert for we_axis
+    assert(!(ns_axis_green && we_axis_green)&& "Security Error.");//detecting safety errors
 }

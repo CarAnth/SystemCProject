@@ -75,7 +75,7 @@ void TrafficGenerator::targeted_traffic()
         ev_SN->notify(SC_ZERO_TIME);
         wait(1,SC_SEC);
 
-        ev_NS->notify(SC_ZERO_TIME);
+        ev_NS->notify();
         wait(1,SC_SEC);
         
         ev_WE->notify(SC_ZERO_TIME);
@@ -87,20 +87,20 @@ void TrafficGenerator::targeted_traffic()
         //parallel direction
         ev_SN->notify(SC_ZERO_TIME);
         ev_NS->notify(SC_ZERO_TIME);
-        wait(6,SC_SEC);
+        wait(2,SC_SEC);
         
         ev_WE->notify(SC_ZERO_TIME);
         ev_EW->notify(SC_ZERO_TIME);
-        wait(6,SC_SEC);
+        wait(2,SC_SEC);
 
         //perpendicular
         ev_NS->notify(SC_ZERO_TIME);
         ev_WE->notify(SC_ZERO_TIME);
-        wait(6,SC_SEC);
+        wait(2,SC_SEC);
         
         ev_SN->notify(SC_ZERO_TIME);
         ev_EW->notify(SC_ZERO_TIME);
-        wait(15,SC_SEC);//40
+        wait(5,SC_SEC);//40
 
         
 
