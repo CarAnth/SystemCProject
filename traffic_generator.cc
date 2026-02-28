@@ -75,7 +75,7 @@ void TrafficGenerator::targeted_traffic()
         ev_SN->notify(SC_ZERO_TIME);
         wait(1,SC_SEC);
 
-        ev_NS->notify();
+        ev_NS->notify(SC_ZERO_TIME);
         wait(1,SC_SEC);
         
         ev_WE->notify(SC_ZERO_TIME);

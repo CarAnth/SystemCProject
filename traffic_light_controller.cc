@@ -71,9 +71,9 @@ void LightController::control_logic()
         if (ns_memory)
         {
             int serve_NS = (cnt_NS < 5) ? cnt_NS : 5;
-            int serve_SN = (cnt_SN < 5) ? cnt_NS : 5;
+            int serve_SN = (cnt_SN < 5) ? cnt_SN : 5;
             bool ns_finished = (serve_NS==0);
-            bool sn_finished = (serve_NS==0);
+            bool sn_finished = (serve_SN==0);
 
             WE.write(false);
             EW.write(false);
@@ -81,16 +81,16 @@ void LightController::control_logic()
             NS.write(serve_NS > 0 ? true : false);
             SN.write(serve_SN > 0 ? true : false);
 
-            ev_phase_end.notify(5,SC_SEC);
+            if (serve_NS > 0) ev_NS_done.notify(serve_NS, SC_SEC);
+            if (serve_SN > 0) ev_SN_done.notify(serve_SN, SC_SEC);
 
-          
-          
+            ev_phase_end.notify(5,SC_SEC);
 
           while (true)
           {
             wait(ev_NS_done | ev_SN_done | ev_phase_end);
         
-          if (ev_NS_done.triggered() && !ns_finished) {
+          if (ev_NS_done.triggered()) {
             cnt_NS -= serve_NS;
             if (cnt_NS < 0) cnt_NS = 0;
             NS.write(false);
@@ -98,18 +98,17 @@ void LightController::control_logic()
           }
 
         
-          if (ev_SN_done.triggered() && !sn_finished) {
+          if (ev_SN_done.triggered()) {
             cnt_SN -= serve_SN;
             if (cnt_SN < 0) cnt_SN = 0;
             SN.write(false);
             sn_finished = true;
           }
-
-          if (ev_SN_done.triggered()&& ev_NS_done.triggered()) {
-            NS.write(false);
-            SN.write(false);
-            last_was_ns = true;
-            break;
+          if (ns_finished && sn_finished) {
+          NS.write(false);
+          SN.write(false);
+          last_was_ns = true;
+          break;
           }
 
           if (ev_phase_end.triggered()) {
@@ -136,6 +135,9 @@ void LightController::control_logic()
             WE.write(serve_WE > 0 ? true : false);
             EW.write(serve_EW > 0 ? true : false);
 
+            if (serve_WE > 0) ev_WE_done.notify(serve_WE, SC_SEC);
+            if (serve_EW > 0) ev_EW_done.notify(serve_EW, SC_SEC);
+
             ev_phase_end.notify(5,SC_SEC);
           while (true)
           {
@@ -155,18 +157,17 @@ void LightController::control_logic()
             EW.write(false);
             ew_finished = true;
           }
-
-          if (ev_WE_done.triggered()&& ev_EW_done.triggered()) {
+          if (we_finished && ew_finished) {
             WE.write(false);
             EW.write(false);
-            last_was_ns = true;
+            last_was_ns = false;
             break;
           }
 
           if (ev_phase_end.triggered()) {
             WE.write(false);
             EW.write(false);
-            last_was_ns = true;
+            last_was_ns = false;
             break;
           }
           
