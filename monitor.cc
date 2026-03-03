@@ -23,7 +23,6 @@ void Monitor::check_and_print()//observing outputs
 {
 
     cout << sc_time_stamp()//writing log
-
          << "  NS=" << color(NS.read())
          << " SN=" << color(SN.read())<<"\n"
 	     << " WE=" << color(WE.read())

@@ -7,7 +7,7 @@ int TrafficGenerator::next_delay_sec()
     {
         return(rand()%4)+1;//rand()%4=0,1,2,3 with + 1 = 1,2,3,4.
     }else{
-        return 1;//targeted
+        return 1;//when we don't use this line, our system crashes.
     }
     
     
@@ -70,105 +70,101 @@ void TrafficGenerator::generate_EW(){
 void TrafficGenerator::targeted_traffic()
 {
     while (true)
-    {
-        //single direction
-        ev_SN->notify(SC_ZERO_TIME);
+    {   
+        wait(1,SC_SEC);
+        ev_SN->notify();
         wait(1,SC_SEC);
 
-        ev_NS->notify(SC_ZERO_TIME);
+        ev_NS->notify();
         wait(1,SC_SEC);
         
-        ev_WE->notify(SC_ZERO_TIME);
+        ev_WE->notify();
         wait(1,SC_SEC);
 
-        ev_EW->notify(SC_ZERO_TIME);
+        ev_EW->notify();
         wait(1,SC_SEC);
         
         //parallel direction
-        ev_SN->notify(SC_ZERO_TIME);
-        ev_NS->notify(SC_ZERO_TIME);
-        wait(2,SC_SEC);
+        ev_SN->notify();
+        ev_NS->notify();
+        wait(1,SC_SEC);
         
-        ev_WE->notify(SC_ZERO_TIME);
-        ev_EW->notify(SC_ZERO_TIME);
-        wait(2,SC_SEC);
+        ev_WE->notify();
+        ev_EW->notify();
+        wait(1,SC_SEC);
 
         //perpendicular
-        ev_NS->notify(SC_ZERO_TIME);
-        ev_WE->notify(SC_ZERO_TIME);
+        ev_NS->notify();
+        ev_WE->notify();
         wait(2,SC_SEC);
         
-        ev_SN->notify(SC_ZERO_TIME);
-        ev_EW->notify(SC_ZERO_TIME);
-        wait(5,SC_SEC);//40
+        ev_SN->notify();
+        ev_EW->notify();
+        wait(5,SC_SEC);
 
         
 
         //scenarios for counter
-        ev_SN->notify(SC_ZERO_TIME);
+        ev_SN->notify();
         wait(1,SC_SEC);
-        ev_SN->notify(SC_ZERO_TIME);
+        ev_SN->notify();
         wait(1,SC_SEC);
-        ev_SN->notify(SC_ZERO_TIME);
+        ev_SN->notify();
         wait(1,SC_SEC);
-        ev_SN->notify(SC_ZERO_TIME);
+        ev_SN->notify();
         wait(1,SC_SEC);
-        ev_SN->notify(SC_ZERO_TIME);
+        ev_SN->notify();
         wait(1,SC_SEC);
 
         wait(9,SC_SEC);
 
         
 
-        ev_NS->notify(SC_ZERO_TIME);
+        ev_NS->notify();
         wait(1,SC_SEC);
-        ev_NS->notify(SC_ZERO_TIME);
+        ev_NS->notify();
         wait(1,SC_SEC);
-        ev_NS->notify(SC_ZERO_TIME);
+        ev_NS->notify();
         wait(1,SC_SEC);
-        ev_NS->notify(SC_ZERO_TIME);
+        ev_NS->notify();
         wait(8,SC_SEC);
 
         
 
-        ev_WE->notify(SC_ZERO_TIME);
+        ev_WE->notify();
         wait(1,SC_SEC);
-        ev_WE->notify(SC_ZERO_TIME);
+        ev_WE->notify();
         wait(1,SC_SEC);
-        ev_WE->notify(SC_ZERO_TIME);
+        ev_WE->notify();
         wait(1,SC_SEC);
-        ev_WE->notify(SC_ZERO_TIME);
+        ev_WE->notify();
         wait(1,SC_SEC);
-        ev_WE->notify(SC_ZERO_TIME);
+        ev_WE->notify();
         wait(1,SC_SEC);
-        ev_WE->notify(SC_ZERO_TIME);
+        ev_WE->notify();
         wait(6,SC_SEC);
 
-        ev_EW->notify(SC_ZERO_TIME);
+        ev_EW->notify();
         wait(1,SC_SEC);
-        ev_EW->notify(SC_ZERO_TIME);
+        ev_EW->notify();
         wait(1,SC_SEC);
-        ev_EW->notify(SC_ZERO_TIME);
+        ev_EW->notify();
         wait(1,SC_SEC);
-        ev_EW->notify(SC_ZERO_TIME);
+        ev_EW->notify();
         wait(1,SC_SEC);
 
         
 
-        ev_NS->notify(SC_ZERO_TIME);
+        ev_NS->notify();
         wait(1,SC_SEC);
-        ev_SN->notify(SC_ZERO_TIME);
+        ev_SN->notify();
         wait(1,SC_SEC);
-        ev_WE->notify(SC_ZERO_TIME);
+        ev_WE->notify();
         wait(1,SC_SEC);
-        ev_WE->notify(SC_ZERO_TIME);
+        ev_WE->notify();
         wait(1,SC_SEC);
-        ev_WE->notify(SC_ZERO_TIME);
+        ev_WE->notify();
         wait(1,SC_SEC);
-
-
-
     }
-    
     
 }

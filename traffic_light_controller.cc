@@ -3,14 +3,12 @@
 LightController::LightController(sc_module_name name)
 : sc_module(name)//base class
   {
-    
     SC_METHOD(event_counter);
     dont_initialize();
     sensitive << ev_NS << ev_SN << ev_WE << ev_EW;
     
     SC_THREAD(control_logic);//we will use wait()
-
-    //reset all memories be
+    
     cnt_NS = 0;
     cnt_SN = 0;
     cnt_WE = 0;
@@ -84,11 +82,11 @@ void LightController::control_logic()
             if (serve_NS > 0) ev_NS_done.notify(serve_NS, SC_SEC);
             if (serve_SN > 0) ev_SN_done.notify(serve_SN, SC_SEC);
 
-            ev_phase_end.notify(5,SC_SEC);
+            ev_ns_phase_end.notify(5,SC_SEC);
 
           while (true)
           {
-            wait(ev_NS_done | ev_SN_done | ev_phase_end);
+            wait(ev_NS_done | ev_SN_done | ev_ns_phase_end);
         
           if (ev_NS_done.triggered()) {
             cnt_NS -= serve_NS;
@@ -105,13 +103,11 @@ void LightController::control_logic()
             sn_finished = true;
           }
           if (ns_finished && sn_finished) {
-          NS.write(false);
-          SN.write(false);
           last_was_ns = true;
           break;
           }
 
-          if (ev_phase_end.triggered()) {
+          if (ev_ns_phase_end.triggered()) {
             NS.write(false);
             SN.write(false);
             last_was_ns = true;
@@ -138,12 +134,12 @@ void LightController::control_logic()
             if (serve_WE > 0) ev_WE_done.notify(serve_WE, SC_SEC);
             if (serve_EW > 0) ev_EW_done.notify(serve_EW, SC_SEC);
 
-            ev_phase_end.notify(5,SC_SEC);
+            ev_we_phase_end.notify(5,SC_SEC);
           while (true)
           {
-            wait(ev_WE_done | ev_EW_done | ev_phase_end);
+            wait(ev_WE_done | ev_EW_done | ev_we_phase_end);
         
-          if (ev_WE_done.triggered() && !we_finished) {
+          if (ev_WE_done.triggered()) {
             cnt_WE -= serve_WE;
             if (cnt_WE < 0) cnt_WE = 0;
             WE.write(false);
@@ -151,20 +147,19 @@ void LightController::control_logic()
           }
 
         
-          if (ev_EW_done.triggered() && !ew_finished) {
+          if (ev_EW_done.triggered()) {
             cnt_EW -= serve_EW;
             if (cnt_EW < 0) cnt_EW = 0;
             EW.write(false);
             ew_finished = true;
           }
+          
           if (we_finished && ew_finished) {
-            WE.write(false);
-            EW.write(false);
             last_was_ns = false;
             break;
           }
 
-          if (ev_phase_end.triggered()) {
+          if (ev_we_phase_end.triggered()) {
             WE.write(false);
             EW.write(false);
             last_was_ns = false;
