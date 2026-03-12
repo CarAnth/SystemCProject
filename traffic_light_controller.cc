@@ -49,10 +49,15 @@ void LightController::event_counter()
 
 void LightController::control_logic()
 {
+
     //inf while
     while (true) {
         if ((cnt_NS + cnt_SN + cnt_WE + cnt_EW) == 0)
             wait(ev_req);
+        cout << "NS cars: " << cnt_NS << "\n"
+        << "SN cars: "<< cnt_SN << "\n"
+        << "WE cars: " << cnt_WE << "\n"
+        << "EW cars: " << cnt_EW << "\n"<< endl;
 
         bool ns_memory = (cnt_SN + cnt_NS) > 0;
         bool we_memory = (cnt_WE + cnt_EW) > 0;
@@ -90,7 +95,6 @@ void LightController::control_logic()
         
           if (ev_NS_done.triggered()) {
             cnt_NS -= serve_NS;
-            if (cnt_NS < 0) cnt_NS = 0;
             NS.write(false);
             ns_finished = true;
           }
@@ -98,7 +102,6 @@ void LightController::control_logic()
         
           if (ev_SN_done.triggered()) {
             cnt_SN -= serve_SN;
-            if (cnt_SN < 0) cnt_SN = 0;
             SN.write(false);
             sn_finished = true;
           }
@@ -141,7 +144,6 @@ void LightController::control_logic()
         
           if (ev_WE_done.triggered()) {
             cnt_WE -= serve_WE;
-            if (cnt_WE < 0) cnt_WE = 0;
             WE.write(false);
             we_finished = true;
           }
@@ -149,7 +151,6 @@ void LightController::control_logic()
         
           if (ev_EW_done.triggered()) {
             cnt_EW -= serve_EW;
-            if (cnt_EW < 0) cnt_EW = 0;
             EW.write(false);
             ew_finished = true;
           }
@@ -165,7 +166,7 @@ void LightController::control_logic()
             last_was_ns = false;
             break;
           }
-          
+
         }
         }
     }
